@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 为了方便大家查看，我把有关网页布局的 CSS 和有关页面内容的 CSS -->
+    <!-- 分开了，方便大家查看。 -->
+    <!-- 这里分别引入 -->
+    <link rel="stylesheet" href="./styles/layout.css" />
+    <link rel="stylesheet" href="./styles/content.css" />
+    <title>simple layout</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="appbar">
+        <div class="appbar-item">
+          <div class="menu-btn" style="color: white">
+            <!-- 这里是一个 svg 元素，可以理解为一个图像（矢量图像），详细介绍请自行
+              MDN，这里是左上角那个图标 -->
+            <svg style="height: 100%" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="appbar-item sdu-logo-container">
+          <img class="sdu-logo" src="./images/sdu-online.png" />
+        </div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tabbar-tab tabbar-tab--active">Tab 1</div>
+        <div class="tabbar-tab">Tab 2</div>
+        <div class="tabbar-tab">Tab 3</div>
+      </div>
+    </header>
+
+    <div class="page-container">
+      <!-- 这才是网页的主体内容 -->
+      <main class="page">
+        <div class="page-item" id="layout-demo">
+          <img src="./images/component.png" />
+        </div>
+        <div class="page-item" id="please-appreciate-cats">
+          <div style="margin: 1rem; font-size: 1.5em">请鉴赏猫猫图 😎</div>
+          <img src="./images/cat/1.gif" />
+          <img src="./images/cat/2.gif" />
+          <img src="./images/cat/3.gif" />
+          <img src="./images/cat/4.gif" />
+          <img src="./images/cat/5.gif" />
+          <img src="./images/cat/6.gif" />
+          <img src="./images/cat/7.gif" />
+          <img src="./images/cat/8.gif" />
+          <img src="./images/cat/9.gif" />
+          <img src="./images/cat/10.gif" />
+          <img src="./images/cat/11.gif" />
+          <img src="./images/cat/12.gif" />
+        </div>
+        <div></div>
+      </main>
+    </div>
+
+    <div>
+      <div class="drawer drawer-left">
+        <div class="drawer-container"></div>
+      </div>
+      <div class="drawer drawer-right">
+        <div class="drawer-container">sss</div>
+      </div>
+    </div>
+    <script src="./scripts/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,194 @@
+/* 引入外部 CSS，这个 CSS 文件的作用是把浏览器自带样式全部去掉。 */
+@import url('https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css');
+
+/* 定义一些 CSS 变量，CSS 变量的介绍详见 https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties */
+/* 先介绍一些单位，详细请阅读 https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Values_and_units */
+/* 首先是比较好理解的 px，即像素 */
+/* %，百分比单位，相对于父元素的相应规则的百分比 */
+/* em，在 font-size 中使用是相对于父元素的字体大小，在其他属性中使用是相对于自身的字体大小，如 width */
+/* rem，相对于根元素的字体大小 */
+:root {
+  --color-primary: #9c0c13;
+  --height-appbar: 3.6rem;
+  --height-tabber: 2rem;
+  --height-header: 5.6rem;
+  --width-drawer: 20%;
+  --width-drawer-max: 16rem;
+}
+
+/* 定义整个文档的字体族是 sans-serif */
+/* serif 是指衬线字体，比如宋体，每一笔的粗细有不同，带修饰 */
+/* sans-serif 是无衬线字体，比如黑体，每个笔画一样粗 */
+/* 还有 monospace 是等宽字体，所有字符宽度相等，常用于显示代码 */
+/* 如上分类不止用于 CSS */
+/* 此处具体是什么字体要看浏览器默认 */
+html {
+  font-family: sans-serif;
+}
+
+/* header 包含 appbar 和 tabbar */
+/* 因为相对页面，所以直接 fixed */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  /* z-index 调高一点，防止主体内容滚动时会显示在 header 上方 */
+  z-index: 2000;
+
+  /* 山大红 */
+  background-color: var(--color-primary);
+}
+
+/* appbar 就是显示山东大学 logo 那一栏 */
+.appbar {
+  /* 设置为弹性盒子，让元素从左往右排 */
+  display: flex;
+
+  /* 主轴方向为水平，即从左往右 */
+  flex-direction: row;
+
+  /* 从主轴开头开始排列，表现效果为左对齐 */
+  justify-content: start;
+  height: var(--height-appbar);
+}
+
+/* 给 appbar 内的项目高度全调成 100% 让它先占满，再设定内边距 padding，缩小内容。 */
+.appbar-item {
+  height: 100%;
+  padding: 0.6rem;
+}
+
+/* 调教按钮样式，看不懂可以先不看，自己写的时候显示出来就行 */
+.menu-btn {
+  height: 100%;
+  width: 100%;
+  padding: 0.3rem;
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+/* 鼠标放在按钮上的时候，会有一层半透明遮罩 */
+.menu-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 点击按钮的时候，半透明遮罩透明度变低 */
+.menu-btn:active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* 让图片高度占满父元素内容 */
+.sdu-logo {
+  height: 100%;
+}
+
+.tabbar {
+  height: var(--height-tabber);
+
+  /* 给底部添加一点阴影，好看一点 */
+  box-shadow: 0 3px 5px 0 rgb(0 0 0 / 0.25);
+}
+
+/* 这里是 tabbar 的元素，分别有三个 tab */
+/* 注意这里虽然内容排列方式和 appbar 一样，都是从左往右，但采用的不同的方式。 */
+/* appbar 那里是将 appbar 设置为弹性盒子，实现内容从左到右 */
+/* 这里是将子元素设置成 display: inline-block，来实现子元素虽然像块级元素那样灵活，但排列时从左到右而不是另起一行 */
+.tabbar-tab {
+  /* 设置为行内块级元素 */
+  display: inline-block;
+
+  /* 高度占满 tabbar */
+  height: 100%;
+
+  /* 子元素设置左右边距，好看点 */
+  padding: 0 16px;
+
+  /* 文字居中 */
+  text-align: center;
+
+  /* 将内容文字显示为大写，注意只是显示为大写 */
+  text-transform: uppercase;
+
+  /* 这一行是为了设置文字居中对齐 */
+  /* 因为块级元素内文字居中比较麻烦，这里用的方法是把文字行高设定为和父元素一样 */
+  line-height: var(--height-tabber);
+
+  /* 设置覆盖时鼠标指针样式 */
+  cursor: pointer;
+
+  /* 设置文字颜色 */
+  color: white;
+}
+
+/* 激活的 tab 会有 tabbar-tab--active 类 */
+/* 样式为底下有一条白色的线，这里使用阴影实现，阴影向内，偏移 5px，不模糊 */
+/* 其实设置 border-bottom 也可以，不过 border-bottom 会占用元素外部空间 */
+/* 而向内的阴影不会 */
+.tabbar-tab--active {
+  box-shadow: inset 0 -4px white;
+
+  /* 下面这条和上面那条效果类似，但这里用下边框其实视觉上没有什么区别，你能解释一下原理吗？ */
+  /* border-bottom: 4px solid white; */
+}
+
+/* 鼠标覆盖时加重阴影，并且向上偏移一点 */
+.tabbar-tab:hover {
+  /* 加重阴影 */
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* 向上偏移 */
+  transform: translateY(-0.25em);
+}
+
+/* 页面主体部分的容器 */
+.page-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+
+  /* 左右内边距，让出页面左右栏的空间 */
+  padding: 0 min(var(--width-drawer), var(--width-drawer-max));
+
+  /* 上边距，让出页面上面那一栏的空间 */
+  padding-top: var(--height-header);
+}
+
+/* 网页主体内容，即中间那一块 */
+.page {
+  /* 设置左右内边距，让内容别和两侧贴一块，比较好看 */
+  padding: 0 1.25rem;
+  margin: auto;
+  max-width: 960px;
+  min-height: 100%;
+}
+
+/* 左右两栏的共同样式 */
+.drawer {
+  position: fixed;
+  width: var(--width-drawer);
+  max-width: var(--width-drawer-max);
+  height: 100%;
+  top: 0;
+  padding-top: var(--height-header);
+}
+
+/* 左栏靠左 */
+.drawer-left {
+  left: 0;
+  box-shadow: 0 3px 4px 0 rgb(0 0 0 / 0.25);
+}
+
+/* 右栏靠右 */
+.drawer-right {
+  right: 0;
+  box-shadow: 0 -3px 4px 0 rgb(0 0 0 / 0.25);
+}
+
+.drawer-container {
+  padding: 1rem;
+}

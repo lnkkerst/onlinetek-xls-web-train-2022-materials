@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo 1</title>
+    <style>
+      /* 清除浏览器部分默认样式 */
+      @import url('https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css');
+
+      /* 主体部分居中，占满但不超过 1280px */
+      main {
+        width: 100%;
+        max-width: 1280px;
+        padding: 1rem 1rem;
+        margin: 0 auto;
+      }
+
+      /* 轮播图，固定长宽比为 16:9，padding hack */
+      .corousel {
+        position: relative;
+        height: 0;
+        width: 100%;
+        padding-bottom: calc(100% * 9 / 16);
+      }
+
+      /* 占满，真正的容器 */
+      .corousel-container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      /* 图片们，不换行 */
+      .corousel-images {
+        position: relative;
+        height: 100%;
+        white-space: nowrap;
+      }
+
+      /* 过渡动画，怎么就没人用这个呢 😢 */
+      .corousel-images--transition {
+        transition: left 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      /* 图片容器，并排放，排成一排 */
+      .corousel-image {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* 图片，相对于容器进行定位，实现居中 */
+      .corousel-image img {
+        position: absolute;
+        min-width: 100%;
+        min-height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      /* 所有点的容器 */
+      .corousel-dots {
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* 单个点 */
+      .corousel-dot {
+        display: inline-block;
+        width: 0.75rem;
+        height: 0.75rem;
+        margin: 0 0.2rem;
+        border-radius: 50%;
+        background-color: white;
+        opacity: 0.36;
+        /* 这里也有个过渡动画，透明度的 */
+        transition: opacity 0.4s;
+        cursor: pointer;
+      }
+
+      .corousel-dot--active {
+        opacity: 0.96;
+      }
+
+      /* 左右箭头共有样式 */
+      .corousel-arrow {
+        position: absolute;
+        top: 50%;
+        height: 5rem;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .corousel-arrow-left {
+        left: 0;
+        border-radius: 0 0.36rem 0.36rem 0;
+      }
+
+      .corousel-arrow-right {
+        right: 0;
+        border-radius: 0.36rem 0 0 0.36rem;
+      }
+
+      /* 箭头按钮交互 */
+      .corousel-arrow:hover {
+        opacity: 0.87;
+      }
+
+      .corousel-arrow:active {
+        opacity: 0.72;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <!-- 就放一个轮播图 -->
+      <div class="corousel">
+        <div class="corousel-container">
+          <!-- 下面一行是图片 -->
+          <div class="corousel-images corousel-images--transition"></div>
+          <!-- 下面一行是指示器 -->
+          <div class="corousel-dots"></div>
+          <!-- 下面一个元素是左右箭头按钮，俩 SVG -->
+          <div>
+            <div class="corousel-arrow corousel-arrow-left">
+              <svg width="32" height="32" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="m13.3 17.3l-4.6-4.6q-.15-.15-.212-.325q-.063-.175-.063-.375t.063-.375q.062-.175.212-.325l4.6-4.6q.275-.275.7-.275q.425 0 .7.275q.275.275.275.7q0 .425-.275.7L10.8 12l3.9 3.9q.275.275.275.7q0 .425-.275.7q-.275.275-.7.275q-.425 0-.7-.275Z"
+                />
+              </svg>
+            </div>
+            <div class="corousel-arrow corousel-arrow-right">
+              <svg width="32" height="32" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M8.7 17.3q-.275-.275-.275-.7q0-.425.275-.7l3.9-3.9l-3.9-3.9q-.275-.275-.275-.7q0-.425.275-.7q.275-.275.7-.275q.425 0 .7.275l4.6 4.6q.15.15.213.325q.062.175.062.375t-.062.375q-.063.175-.213.325l-4.6 4.6q-.275.275-.7.275q-.425 0-.7-.275Z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // 定义一些可能会全局用到的变量
+
+      // 图片数组，可随意修改
+      let images = Array.from(
+        { length: 10 },
+        (_, index) => `https://thiscatdoesnotexist.com/?tempid=${index}`
+      );
+      // 图片们，等会要调 left 来实现滚动来着
+      let imagesElement = document.querySelector('.corousel-images');
+      // 指示器们
+      let dotsElement = document.querySelector('.corousel-dots');
+      // 现在在那张图
+      let currentImage = 0;
+      // 自动轮播的延迟
+      let delay = 5000;
+      // 自动轮播的定时器
+      let timer = setInterval(nextImage, delay);
+
+      function addImage(url, id, indicator = true) {
+        let img = new Image();
+        img.alt = 'loading...';
+
+        setTimeout(() => {
+          img.src = url;
+        }, id * 10);
+
+        let container = document.createElement('div');
+        container.appendChild(img);
+        // 同时添加 `corousel-image` 和 `corousel-image-id` 的 class，方便加样式和选节点
+        container.classList.add(`corousel-image`);
+        container.classList.add(`corousel-image-${id}`);
+        imagesElement.appendChild(container);
+
+        if (!indicator) {
+          return;
+        }
+
+        let dot = document.createElement('div');
+        dot.classList.add('corousel-dot');
+        dot.classList.add(`corousel-dot-${id}`);
+        // 为指示器添加事件监听
+        dot.addEventListener('click', () => {
+          // 跳转到对应图片
+          moveTo(id);
+          // 重置定时器
+          resetTimer();
+        });
+        dotsElement.appendChild(dot);
+      }
+
+      // 初始化一些东西，其实没必要写一个函数，，，
+      function init() {
+        // 动态插入图片和对应的指示器
+        addImage(images.at(-1), -1, false);
+        images.forEach(addImage);
+        addImage(images[0], images.length, false);
+
+        // 左右箭头按钮的事件监听
+        document
+          .querySelector('.corousel-arrow-left')
+          .addEventListener('click', () => {
+            prevImage();
+            resetTimer();
+          });
+        document
+          .querySelector('.corousel-arrow-right')
+          .addEventListener('click', () => {
+            nextImage();
+            resetTimer();
+          });
+      }
+      init();
+
+      // 用来导航到下标对应图片
+      function moveTo(index) {
+        if (index >= images.length || index < 0) {
+          return;
+        }
+        if(currentImage === images.length - 1 && index === 0) {
+          imagesElement.classList.remove("corousel-images--transition");
+        }
+        let { width } = imagesElement.getBoundingClientRect();
+        imagesElement.style.left = `-${index * width}px`;
+
+        // 取消切换前图片指示器激活状态
+        document
+          .querySelector(`.corousel-dot-${currentImage}`)
+          ?.classList.remove('corousel-dot--active');
+        currentImage = index;
+        // 激活切换后图片指示器
+        document
+          .querySelector(`.corousel-dot-${currentImage}`)
+          ?.classList.add('corousel-dot--active');
+      }
+      // 先移动到第一张图片
+      moveTo(currentImage);
+
+      // 移动到下一张图片
+      function nextImage() {
+        moveTo((currentImage + 1) % images.length);
+      }
+
+      // 移动到上一张图片
+      function prevImage() {
+        let prev = currentImage - 1;
+        if (prev < 0) {
+          prev = images.length - 1;
+        }
+        moveTo(prev);
+      }
+
+      // 重置定时器
+      function resetTimer() {
+        if (timer) {
+          clearInterval(timer);
+        }
+        timer = setInterval(nextImage, delay);
+      }
+      resetTimer();
+    </script>
+  </body>
+</html>

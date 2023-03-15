@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo 1</title>
+    <style>
+      @import url('https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css');
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        width: 100%;
+        max-width: 1280px;
+        padding: 1rem 1rem;
+        margin: 0 auto;
+      }
+
+      .corousel {
+        position: relative;
+        height: 0;
+        width: 100%;
+        padding-bottom: calc(100% * 9 / 16);
+      }
+
+      .corousel-container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      .corousel-images {
+        position: relative;
+        height: 100%;
+        white-space: nowrap;
+      }
+
+      .corousel-images--transition {
+        transition: left 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .corousel-image {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .corousel-image img {
+        position: absolute;
+        min-width: 100%;
+        min-height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .corousel-dots {
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .corousel-dot {
+        display: inline-block;
+        width: 0.75rem;
+        height: 0.75rem;
+        margin: 0 0.2rem;
+        border-radius: 50%;
+        background-color: white;
+        opacity: 0.36;
+        transition: opacity 0.4s;
+        cursor: pointer;
+      }
+
+      .corousel-dot--active {
+        opacity: 0.96;
+      }
+
+      .corousel-arrow {
+        position: absolute;
+        top: 50%;
+        height: 5rem;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .corousel-arrow-left {
+        left: 0;
+        border-radius: 0 0.36rem 0.36rem 0;
+      }
+
+      .corousel-arrow-right {
+        right: 0;
+        border-radius: 0.36rem 0 0 0.36rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="corousel">
+        <div class="corousel-container">
+          <div class="corousel-images corousel-images--transition"></div>
+          <div class="corousel-dots"></div>
+          <div>
+            <div class="corousel-arrow corousel-arrow-left">
+              <svg width="32" height="32" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="m13.3 17.3l-4.6-4.6q-.15-.15-.212-.325q-.063-.175-.063-.375t.063-.375q.062-.175.212-.325l4.6-4.6q.275-.275.7-.275q.425 0 .7.275q.275.275.275.7q0 .425-.275.7L10.8 12l3.9 3.9q.275.275.275.7q0 .425-.275.7q-.275.275-.7.275q-.425 0-.7-.275Z"
+                />
+              </svg>
+            </div>
+            <div class="corousel-arrow corousel-arrow-right">
+              <svg width="32" height="32" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M8.7 17.3q-.275-.275-.275-.7q0-.425.275-.7l3.9-3.9l-3.9-3.9q-.275-.275-.275-.7q0-.425.275-.7q.275-.275.7-.275q.425 0 .7.275l4.6 4.6q.15.15.213.325q.062.175.062.375t-.062.375q-.063.175-.213.325l-4.6 4.6q-.275.275-.7.275q-.425 0-.7-.275Z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let images = Array.from(
+        { length: 10 },
+        (_, index) => `https://thiscatdoesnotexist.com/?tempid=${index}`
+      );
+      let imagesElement = document.querySelector('.corousel-images');
+      let dotsElement = document.querySelector('.corousel-dots');
+      let currentImage = 0;
+      let delay = 5000;
+      let timer = setInterval(nextImage, delay);
+
+      function init() {
+        images.forEach((url, index) => {
+          let img = new Image();
+          img.alt = 'loading...';
+
+          setTimeout(() => {
+            img.src = url;
+          }, index * 200);
+
+          let container = document.createElement('div');
+          container.appendChild(img);
+          container.classList.add(`corousel-image`);
+          container.classList.add(`corousel-image-${index}`);
+          imagesElement.appendChild(container);
+
+          let dot = document.createElement('div');
+          dot.classList.add('corousel-dot');
+          dot.classList.add(`corousel-dot-${index}`);
+          dot.addEventListener('click', () => {
+            moveTo(index);
+            resetTimer();
+          });
+          dotsElement.appendChild(dot);
+        });
+
+        document
+          .querySelector('.corousel-arrow-left')
+          .addEventListener('click', () => {
+            prevImage();
+            resetTimer();
+          });
+        document
+          .querySelector('.corousel-arrow-right')
+          .addEventListener('click', () => {
+            nextImage();
+            resetTimer();
+          });
+      }
+      init();
+
+      function moveTo(index) {
+        console.log(index);
+        if (index >= images.length || index < 0) {
+          return;
+        }
+        let { width } = imagesElement.getBoundingClientRect();
+        imagesElement.style.left = `-${index * width}px`;
+
+        document
+          .querySelector(`.corousel-dot-${currentImage}`)
+          ?.classList.remove('corousel-dot--active');
+        currentImage = index;
+        document
+          .querySelector(`.corousel-dot-${currentImage}`)
+          ?.classList.add('corousel-dot--active');
+      }
+      moveTo(currentImage);
+
+      function nextImage() {
+        moveTo((currentImage + 1) % images.length);
+      }
+
+      function prevImage() {
+        let next = currentImage - 1;
+        if (next < 0) {
+          next = images.length - 1;
+        }
+        moveTo(next);
+      }
+
+      function resetTimer() {
+        if (timer) {
+          clearInterval(timer);
+        }
+        timer = setInterval(nextImage, delay);
+      }
+      resetTimer();
+
+      let dragInfo = {};
+
+      imagesElement.addEventListener('dragstart', e => {
+        clearInterval(timer);
+        dragInfo.x = e.screenX;
+        dragInfo.left = parseInt(imagesElement.style.left);
+        imagesElement.classList.remove('corousel-images--transition');
+        console.log(dragInfo);
+      });
+      imagesElement.addEventListener('drag', e => {
+        imagesElement.style.left = `${
+          dragInfo.left + e.screenX - dragInfo.x
+        }px`;
+        console.log(imagesElement.style.left);
+      });
+      imagesElement.addEventListener('dragend', e => {
+        imagesElement.classList.add('corousel-images--transition');
+        if (e.screenX - dragInfo.x > 0) {
+          prevImage();
+        } else {
+          nextImage();
+        }
+        resetTimer();
+      });
+    </script>
+  </body>
+</html>

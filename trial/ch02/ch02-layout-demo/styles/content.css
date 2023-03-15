@@ -1,0 +1,29 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-item {
+  background-color: white;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+#please-appreciate-cats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#please-appreciate-cats img {
+  margin: 0.5rem;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 66%;
+}
