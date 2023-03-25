@@ -33,7 +33,11 @@ function sidebar() {
           text: 'VSCode 插件推荐清单',
           link: '/misc/vscode-extensions-recommend.md'
         },
-        { text: 'ES6 常用语法', link: '/misc/es6-features/index.md' }
+        { text: '(前端)ES6 常用语法', link: '/misc/es6-features/index.md' },
+        {
+          text: '(前端)ESLint 的使用 & TypeScript 安利',
+          link: '/misc/eslint-usage/index.md'
+        }
       ]
     },
     {
