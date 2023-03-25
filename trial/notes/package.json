@@ -8,7 +8,7 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "serve": "vitepress serve docs",
-    "pub": "pnpm run build && rsync -P ./docs/.vitepress/dist/* -r root@dv:/srv/http/static/slides/onlinetek-train-2022/notes/"
+    "pub": "pnpm run build && rsync -P ./docs/.vitepress/dist/* -r root@azjp:/srv/http/static/slides/onlinetek-train-2022/notes/"
   },
   "keywords": [],
   "author": "",

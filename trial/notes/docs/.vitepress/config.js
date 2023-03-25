@@ -32,7 +32,8 @@ function sidebar() {
         {
           text: 'VSCode 插件推荐清单',
           link: '/misc/vscode-extensions-recommend.md'
-        }
+        },
+        { text: 'ES6 常用语法', link: '/misc/es6-features/index.md' }
       ]
     },
     {
