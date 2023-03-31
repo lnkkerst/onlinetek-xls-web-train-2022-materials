@@ -37,6 +37,10 @@ function sidebar() {
         {
           text: '(前端)ESLint 的使用 & TypeScript 安利',
           link: '/misc/eslint-usage/index.md'
+        },
+        {
+          text: '(前端)lnk. 写一个 Vue 项目的时候会先干什么(伪)',
+          link: '/misc/how-do-lnk-start-a-vue-project-lite/index.md'
         }
       ]
     },
