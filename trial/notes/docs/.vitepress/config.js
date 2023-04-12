@@ -60,7 +60,11 @@ function sidebar() {
           text: 'Node.js 以及 npm 的安装与使用',
           link: '/formal/20221124-node-install/index.md'
         },
-        { text: 'Git 的安装', link: '/formal/20230107-git-install/index.md' }
+        { text: 'Git 的安装', link: '/formal/20230107-git-install/index.md' },
+        {
+          text: '怎么给自己的项目上线',
+          link: '/formal/server-and-serverless/index.md'
+        }
       ]
     }
   ];
