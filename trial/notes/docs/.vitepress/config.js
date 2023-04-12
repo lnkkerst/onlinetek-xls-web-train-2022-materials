@@ -12,6 +12,9 @@ export default defineConfig({
   markdown: {
     headers: {
       level: [0, 0]
+    },
+    toc: {
+      level: [2, 3, 4]
     }
   },
 
